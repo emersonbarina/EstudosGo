@@ -1,7 +1,7 @@
 package enderecos_test
 
 import (
-	"introducao-testes/enderecos"
+	. "introducao-testes/enderecos"
 	"testing"
 )
 
@@ -25,7 +25,7 @@ func TestTipoDeEnderecp(t *testing.T) {
 	}
 
 	for _, cenario := range cenariosDeTeste {
-		tipoDeEnderecoRecebido := enderecos.TipoDeEndereco(cenario.retornoEsperado)
+		tipoDeEnderecoRecebido := TipoDeEndereco(cenario.retornoEsperado)
 		if tipoDeEnderecoRecebido != cenario.retornoEsperado {
 			t.Errorf("O tipo recebido é diferente do esperado! Esperava %s e recebeu %s", cenario.retornoEsperado, tipoDeEnderecoRecebido)
 		}
