@@ -2,11 +2,6 @@ package enderecos
 
 import "testing"
 
-type cenarioDeTeste struct {
-	enderecoInserido string
-	retornoEsperado  string
-}
-
 func TestTipoDeEnderecp(t *testing.T) {
 	enderecoParaTeste := "Rua ABC"
 
