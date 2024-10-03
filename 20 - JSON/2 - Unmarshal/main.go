@@ -7,7 +7,7 @@ import (
 )
 
 type cachorro struct {
-	Nome  string `json:"nome"`
+	Nome  string `json:"-"`
 	Raca  string `json:"raca"`
 	Idade uint   `json:"idade"`
 }
