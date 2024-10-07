@@ -5,6 +5,14 @@ import (
 	"net/http"
 )
 
+func home(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("Olá Mundo!"))
+}
+
+func user(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("carregar página usuários!"))
+}
+
 func main() {
 	// Conteitos básicos
 	// HTTP é um protoco de comunicação - Base de comunicação web
@@ -16,13 +24,9 @@ func main() {
 
 	// Criando uma rota
 	// testar em browse : http://localhost:5001/home
-	http.HandleFunc("/home", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Olá Mundo!"))
-	})
+	http.HandleFunc("/home", home)
 
-	http.HandleFunc("/user", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("carregar página usuários!"))
-	})
+	http.HandleFunc("/user", user)
 
 	// Criando um servidor para testes
 	log.Fatal(http.ListenAndServe(":5001", nil))
