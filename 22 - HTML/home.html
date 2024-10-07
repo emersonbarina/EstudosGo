@@ -11,16 +11,18 @@
       font-size: 100px;
       font-family: Georgia, 'Times New Roman', Times, serif;
     }
-    marquee {
-      color: blueviolet;
-    }
+  
   </style>
 </head>
-<!-- W3SCHOOLS dica de estudo html -->
 <body>
   <h2> Página Principal </h2>
-  <marquee> 
-    <h4>Seja bem vindo, {{ .Nome }} </h4>
-  </marquee>
+  <button id="botao">Clique aqui!</button>
+  <script>
+    var botao = document.getElementById("botao")
+    botao.onclick = function() {
+      alert("Boão clicado!")
+    }
+     
+  </script>
 </body>
 </html>
