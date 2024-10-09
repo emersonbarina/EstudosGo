@@ -36,5 +36,11 @@ docker port devbook
 
 
 # usando no go
-go mod init banco-de-dados
+go mod init <projeto>
 go get github.com/go-sql-driver/mysql
+
+go get github.com/gorilla/mux
+
+Dicas: 
+https://www.connectionstrings.com/
+https://www.youtube.com/watch?v=1VzhUEn2pCU&ab_channel=BrianMorrison
