@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	stringConexao := "golang:golang@tcp(docker.for.mac.localhost:3306)/devbook?charset=utf8&parseTime=True&loc=Local"
+	stringConexao := "root:root@tcp(0.0.0.0:3307)/devbook?charset=utf8&parseTime=True&loc=Local"
 	//db, err:= sql.Open("mysql", "root:password@tcp(docker.for.mac.localhost:3306)/mydbname?parseTime=true")
 
 	db, erro := sql.Open("mysql", stringConexao)

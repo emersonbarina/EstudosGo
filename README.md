@@ -11,17 +11,29 @@ docker exec -it devbook bash
 https://www.datacamp.com/pt/tutorial/set-up-and-configure-mysql-in-docker
 https://hub.docker.com/_/mysql
 
+mysql -u root -p
 
-mysql -u goolang -p
 show databases;
 CREATE DATABASE devbook;
 USE devbook;
 
 CREATE TABLE usuarios( id int auto_increment primary key, nome varchar(50) not null, email varchar(50) not null ) ENGINE=INNODB;
 show tables;
-GRANT ALL PRIVILEGES ON devbook.* TO 'golang'@'localhost'
+GRANT ALL PRIVILEGES ON devbook.* TO 'golang'@'localhost';
+
+mysql -u goolang -p
 
 exit
 
+Parei o serviço e criei novamente informando a porta.
+docker stop devbook
+docker rm devbook
+docker run -d --name devbook -e MYSQL_ROOT_PASSWORD=root -p 3307:3306 mysql  
+docker port devbook
+
+>>> resultado : 3306/tcp -> 0.0.0.0:3307
+
+
+# usando no go
 go mod init banco-de-dados
 go get github.com/go-sql-driver/mysql
