@@ -51,5 +51,11 @@ go build
 # início do projeto com API
 Optei por manter junto ao projeto de estudos.
 
+go mod init api
+
+go get github.com/gorilla/mux
+
+
+
 
 
