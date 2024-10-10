@@ -48,3 +48,8 @@ go get github.com/gorilla/mux
 go build
 ./crud
 
+# início do projeto com API
+Optei por manter junto ao projeto de estudos.
+
+
+
