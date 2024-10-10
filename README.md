@@ -34,13 +34,17 @@ docker port devbook
 
 >>> resultado : 3306/tcp -> 0.0.0.0:3307
 
+Dicas: 
+https://www.connectionstrings.com/
+https://www.youtube.com/watch?v=1VzhUEn2pCU&ab_channel=BrianMorrison
 
-# usando no go
+
+# usando no go - CRUD Básico
 go mod init <projeto>
 go get github.com/go-sql-driver/mysql
 
 go get github.com/gorilla/mux
 
-Dicas: 
-https://www.connectionstrings.com/
-https://www.youtube.com/watch?v=1VzhUEn2pCU&ab_channel=BrianMorrison
+go build
+./crud
+
