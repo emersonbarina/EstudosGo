@@ -22,6 +22,8 @@ show tables;
 CREATE USER 'golang'@'localhost'IDENTIFIED BY 'golang'
 GRANT ALL PRIVILEGES ON devbook.* TO 'golang'@'localhost';
 
+desc usuarios;
+
 mysql -u goolang -p
 
 exit
