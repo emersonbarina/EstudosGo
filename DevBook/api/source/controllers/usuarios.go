@@ -32,12 +32,13 @@ func CriarUsuario(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	repositorio := repositories.NovoRepositorioDeUsuarios(db)
-	usuarioID, erro := repositorio.Criar(usuario)
+	usuario.ID, erro = repositorio.Criar(usuario)
 	if erro != nil {
 		responses.Erro(w, http.StatusInternalServerError, erro)
 		return
 	}
-	usuario.ID = usuarioID
+	responses.JSON(w, http.StatusCreated, usuario)
+
 }
 
 // BuscarUsuario Busca todos usuários no banco de dados
