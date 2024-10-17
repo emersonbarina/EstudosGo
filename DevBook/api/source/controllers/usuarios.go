@@ -6,9 +6,13 @@ import (
 	"api/source/repositories"
 	"api/source/responses"
 	"encoding/json"
+	"errors"
 	"io"
 	"net/http"
+	"strconv"
 	"strings"
+
+	"github.com/gorilla/mux"
 )
 
 // CriarUsuario insere um usuário no banco de dados
@@ -70,7 +74,37 @@ func BuscarUsuarios(w http.ResponseWriter, r *http.Request) {
 
 // BuscarUsuario Busca um usuário no banco de dados
 func BuscarUsuario(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Buscando um Usuário!"))
+	parametros := mux.Vars(r)
+
+	usuarioID, erro := strconv.ParseUint(parametros["usuarioID"], 10, 64)
+	if erro != nil {
+		responses.Erro(w, http.StatusBadRequest, erro)
+		return
+	}
+
+	db, erro := banco.Conectar()
+	if erro != nil {
+		responses.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+	defer db.Close()
+
+	repositorio := repositories.NovoRepositorioDeUsuarios(db)
+	usuario, erro := repositorio.BuscarUsuarioId(usuarioID)
+	if erro != nil {
+		responses.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+	if usuario.ID == 0 {
+		responses.Erro(
+			w,
+			http.StatusNotFound,
+			errors.New("id não encontrado"),
+		)
+		return
+	}
+
+	responses.JSON(w, http.StatusOK, usuario)
 }
 
 // AtualizarUsuario Atualiza um usuário no banco de dados
