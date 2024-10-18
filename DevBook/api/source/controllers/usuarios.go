@@ -29,7 +29,7 @@ func CriarUsuario(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if erro = usuario.Preparar(); erro != nil {
+	if erro = usuario.Preparar("cadastro"); erro != nil {
 		responses.Erro(w, http.StatusBadRequest, erro)
 		return
 	}
@@ -129,7 +129,7 @@ func AtualizarUsuario(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if erro = usuario.Preparar(); erro != nil {
+	if erro = usuario.Preparar("edicao"); erro != nil {
 		responses.Erro(w, http.StatusBadRequest, erro)
 		return
 	}
@@ -142,12 +142,12 @@ func AtualizarUsuario(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	repositorio := repositories.NovoRepositorioDeUsuarios(db)
-	usuario.ID, erro = repositorio.AtualizarUsuario(usuario, usuarioID)
+	erro = repositorio.AtualizarUsuario(usuario, usuarioID)
 	if erro != nil {
 		responses.Erro(w, http.StatusInternalServerError, erro)
 		return
 	}
-	responses.JSON(w, http.StatusOK, usuario)
+	responses.JSON(w, http.StatusNoContent, nil)
 }
 
 // DeletarUsuario Deleta um usuário no banco de dados
