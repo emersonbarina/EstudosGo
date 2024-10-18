@@ -109,7 +109,45 @@ func BuscarUsuario(w http.ResponseWriter, r *http.Request) {
 
 // AtualizarUsuario Atualiza um usuário no banco de dados
 func AtualizarUsuario(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Atualizando Usuário!"))
+	parametros := mux.Vars(r)
+
+	usuarioID, erro := strconv.ParseUint(parametros["usuarioID"], 10, 64)
+	if erro != nil {
+		responses.Erro(w, http.StatusBadRequest, erro)
+		return
+	}
+
+	corpoRequest, erro := io.ReadAll((r.Body))
+	if erro != nil {
+		responses.Erro(w, http.StatusUnprocessableEntity, erro)
+		return
+	}
+
+	var usuario models.Usuario
+	if erro = json.Unmarshal(corpoRequest, &usuario); erro != nil {
+		responses.Erro(w, http.StatusBadRequest, erro)
+		return
+	}
+
+	if erro = usuario.Preparar(); erro != nil {
+		responses.Erro(w, http.StatusBadRequest, erro)
+		return
+	}
+
+	db, erro := banco.Conectar()
+	if erro != nil {
+		responses.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+	defer db.Close()
+
+	repositorio := repositories.NovoRepositorioDeUsuarios(db)
+	usuario.ID, erro = repositorio.AtualizarUsuario(usuario, usuarioID)
+	if erro != nil {
+		responses.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+	responses.JSON(w, http.StatusOK, usuario)
 }
 
 // DeletarUsuario Deleta um usuário no banco de dados

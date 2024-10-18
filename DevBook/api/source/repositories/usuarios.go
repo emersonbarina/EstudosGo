@@ -97,3 +97,25 @@ func (repositorio Usuarios) BuscarUsuarioId(ID uint64) (models.Usuario, error) {
 	}
 	return usuario, erro
 }
+
+// AtualizarUsuario atualizado dados de um usuário
+func (repositorio Usuarios) AtualizarUsuario(usuario models.Usuario, ID uint64) (uint64, error) {
+	statement, erro := repositorio.db.Prepare(
+		"update usuarios set nome = ?, nick = ?, email = ?, senha = ? where id = ?",
+	)
+	if erro != nil {
+		return 0, erro
+	}
+	defer statement.Close()
+
+	resultado, erro := statement.Exec(usuario.Nome, usuario.Nick, usuario.Email, usuario.Senha, ID)
+	if erro != nil {
+		return 0, erro
+	}
+
+	atualizadoID, erro := resultado.LastInsertId()
+	if erro != nil {
+		return 0, erro
+	}
+	return uint64(atualizadoID), nil
+}
