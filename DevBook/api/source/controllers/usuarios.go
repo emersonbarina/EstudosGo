@@ -69,7 +69,6 @@ func BuscarUsuarios(w http.ResponseWriter, r *http.Request) {
 	}
 
 	responses.JSON(w, http.StatusOK, usuarios)
-
 }
 
 // BuscarUsuario Busca um usuário no banco de dados
