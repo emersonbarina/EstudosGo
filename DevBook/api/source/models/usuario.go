@@ -1,6 +1,7 @@
 package models
 
 import (
+	"api/source/security"
 	"errors"
 	"strings"
 	"time"
@@ -20,10 +21,14 @@ type Usuario struct {
 
 // Preparar vai chamar os métodos para validar e formatar os campos de usuarios recebidos
 func (usuario *Usuario) Preparar(etapa string) error {
-	usuario.formatar()
+	if erro := usuario.formatar(etapa); erro != nil {
+		return erro
+	}
+
 	if erro := usuario.validar(etapa); erro != nil {
 		return erro
 	}
+
 	return nil
 }
 
@@ -51,7 +56,7 @@ func (usuario *Usuario) validar(etapa string) error {
 	return nil
 }
 
-func (usuario *Usuario) formatar() {
+func (usuario *Usuario) formatar(etapa string) error {
 	usuario.Nome = strings.Trim(usuario.Nome, " ")
 	usuario.Nick = strings.Trim(usuario.Nick, " ")
 	usuario.Email = strings.Trim(usuario.Email, " ")
@@ -60,4 +65,15 @@ func (usuario *Usuario) formatar() {
 	usuario.Nick = strings.TrimSpace(usuario.Nick)
 	usuario.Email = strings.TrimSpace(usuario.Email)
 	usuario.Senha = strings.TrimSpace(usuario.Senha)
+
+	if etapa == "cadastro" {
+		senhaComHash, erro := security.Hash(usuario.Senha)
+		if erro != nil {
+			return erro
+		}
+
+		usuario.Senha = string(senhaComHash)
+	}
+
+	return nil
 }
