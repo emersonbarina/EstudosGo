@@ -1,23 +1,27 @@
 package middlewares
 
 import (
-	"fmt"
+	"api/source/auth"
+	"api/source/responses"
 	"log"
 	"net/http"
 )
 
 // Logger escreve informacões da requisição no terminal
-func Logger(next http.HandlerFunc) http.HandlerFunc {
+func Logger(proximaFuncao http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		log.Printf("\n %s %s %s", r.Method, r.RequestURI, r.Host)
-		next(w, r)
+		proximaFuncao(w, r)
 	}
 }
 
 // Autenticar verifica se  o usuário fazendo a requisição está autenticado
-func Autenticar(next http.HandlerFunc) http.HandlerFunc {
+func Autenticar(proximaFuncao http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println("autenticando...")
-		next(w, r)
+		if erro := auth.ValidarToken(r); erro != nil {
+			responses.Erro(w, http.StatusUnauthorized, erro)
+			return
+		}
+		proximaFuncao(w, r)
 	}
 }
