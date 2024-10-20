@@ -15,8 +15,6 @@ func main() {
 
 	r := router.Gerar()
 
-	fmt.Println(config.SecretKey) // testando
-
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", config.Porta), r))
 
 }
