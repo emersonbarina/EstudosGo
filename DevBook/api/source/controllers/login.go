@@ -8,7 +8,6 @@ import (
 	"api/source/responses"
 	"api/source/security"
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 )
@@ -48,8 +47,11 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token, _ := auth.CriarToken(usuarioSalvoNoBanco.ID)
-	fmt.Println(token)
+	token, erro := auth.CriarToken(usuarioSalvoNoBanco.ID)
+	if erro != nil {
+		responses.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
 	w.Write([]byte(token))
 
 }
