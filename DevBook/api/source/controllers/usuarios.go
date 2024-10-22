@@ -6,6 +6,7 @@ import (
 	"api/source/models"
 	"api/source/repositories"
 	"api/source/responses"
+	"api/source/security"
 	"encoding/json"
 	"errors"
 	"io"
@@ -317,4 +318,70 @@ func BuscarSeguindo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	responses.JSON(w, http.StatusOK, seguidores)
+}
+
+// AtualizarSenha - atualizar a senha do usuário
+func AtualizarSenha(w http.ResponseWriter, r *http.Request) {
+	usuarioIDNoToken, erro := auth.ExtrairUsuarioID(r)
+	if erro != nil {
+		responses.Erro(w, http.StatusUnauthorized, erro)
+		return
+	}
+
+	parametros := mux.Vars(r)
+	usuarioID, erro := strconv.ParseUint(parametros["usuarioID"], 10, 64)
+	if erro != nil {
+		responses.Erro(w, http.StatusBadRequest, erro)
+		return
+	}
+
+	if usuarioIDNoToken != usuarioID {
+		responses.Erro(w, http.StatusForbidden, errors.New("não é possível atualizar a senha de outro usuário"))
+		return
+	}
+
+	corpoRequisicao, erro := io.ReadAll((r.Body))
+	if erro != nil {
+		responses.Erro(w, http.StatusUnprocessableEntity, erro)
+		return
+	}
+
+	var senha models.Auth
+	if erro = json.Unmarshal(corpoRequisicao, &senha); erro != nil {
+		responses.Erro(w, http.StatusBadRequest, erro)
+		return
+	}
+
+	db, erro := banco.Conectar()
+	if erro != nil {
+		responses.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+	defer db.Close()
+
+	repositorio := repositories.NovoRepositorioDeUsuarios(db)
+	senhaSalvaNoBanco, erro := repositorio.BuscarSenha(usuarioID)
+	if erro != nil {
+		responses.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+
+	if erro = security.VerificarSenha(senhaSalvaNoBanco, senha.Atual); erro != nil {
+		responses.Erro(w, http.StatusUnauthorized, errors.New("senha atual não condiz com a que está salva no banco"))
+		return
+	}
+
+	senhaComHash, erro := security.Hash(senha.Nova)
+	if erro != nil {
+		responses.Erro(w, http.StatusBadRequest, erro)
+		return
+	}
+
+	if erro = repositorio.AtualizarSenha(usuarioID, string(senhaComHash)); erro != nil {
+		responses.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+
+	responses.JSON(w, http.StatusNoContent, nil)
+
 }
