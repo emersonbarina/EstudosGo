@@ -208,14 +208,14 @@ func SeguirUsuario(w http.ResponseWriter, r *http.Request) {
 	}
 
 	parametros := mux.Vars(r)
-	usuarioID, erro := strconv.ParseUint(parametros["usuarioId"], 10, 64)
+	usuarioID, erro := strconv.ParseUint(parametros["usuarioID"], 10, 64)
 	if erro != nil {
 		responses.Erro(w, http.StatusBadRequest, erro)
 		return
 	}
 
 	if seguidorID == usuarioID {
-		responses.Erro(w, http.StatusForbidden, errors.New("Não possível seguir você mesmo"))
+		responses.Erro(w, http.StatusForbidden, errors.New("não possível seguir você mesmo"))
 		return
 	}
 
@@ -231,4 +231,5 @@ func SeguirUsuario(w http.ResponseWriter, r *http.Request) {
 		responses.Erro(w, http.StatusInternalServerError, erro)
 		return
 	}
+	responses.JSON(w, http.StatusNoContent, nil)
 }
