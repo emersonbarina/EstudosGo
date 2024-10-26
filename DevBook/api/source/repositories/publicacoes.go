@@ -36,8 +36,8 @@ func (repositorio Publicacoes) Criar(publicacao models.Publicacao) (uint64, erro
 	return uint64(ultimoIDInserido), nil
 }
 
-// BuscarPublicacao traz uma única publicação
-func (repositorio Publicacoes) BuscarPublicacao(ID uint64) (models.Publicacao, error) {
+// BuscarPublicacaoPorId traz uma única publicação
+func (repositorio Publicacoes) BuscarPublicacaoPorId(ID uint64) (models.Publicacao, error) {
 	linha, erro := repositorio.db.Query(`
 		select 
 			p.*, u.nick 
@@ -111,4 +111,19 @@ func (repositorio Publicacoes) BuscarPublicacoes(usuarioID uint64) ([]models.Pub
 	}
 
 	return publicacoes, nil
+}
+
+// AtualizarPublicacao altera os dados de uma publicação
+func (repositorio Publicacoes) AtualizarPublicacao(publicacaoID uint64, publicacao models.Publicacao) error {
+	statement, erro := repositorio.db.Prepare("update publicacoes set titulo = ?, conteudo = ? where id = ?")
+	if erro != nil {
+		return erro
+	}
+	defer statement.Close()
+
+	if _, erro = statement.Exec(publicacao.Titulo, publicacao.Conteudo, publicacaoID); erro != nil {
+		return erro
+	}
+
+	return nil
 }
