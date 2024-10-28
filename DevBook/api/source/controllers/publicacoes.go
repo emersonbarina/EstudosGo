@@ -142,7 +142,7 @@ func AtualizarPublicacao(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if publicacaoSalvaNoBanco.AutorID != usuarioID {
-		responses.Erro(w, http.StatusForbidden, errors.New("não é possível atualizar uma publicação de outro usuário!"))
+		responses.Erro(w, http.StatusForbidden, errors.New("não é possível atualizar uma publicação de outro usuário"))
 		return
 	}
 
@@ -172,4 +172,43 @@ func AtualizarPublicacao(w http.ResponseWriter, r *http.Request) {
 }
 
 // DeletarPublicacao deleta uma publicação
-func DeletarPublicacao(w http.ResponseWriter, r *http.Request) {}
+func DeletarPublicacao(w http.ResponseWriter, r *http.Request) {
+	usuarioID, erro := auth.ExtrairUsuarioID(r)
+	if erro != nil {
+		responses.Erro(w, http.StatusUnauthorized, erro)
+		return
+	}
+
+	parametros := mux.Vars(r)
+	publicacaoID, erro := strconv.ParseUint(parametros["publicacaoId"], 10, 64)
+	if erro != nil {
+		responses.Erro(w, http.StatusBadRequest, erro)
+		return
+	}
+
+	db, erro := banco.Conectar()
+	if erro != nil {
+		responses.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+	defer db.Close()
+
+	repositorio := repositories.NovoRepositorioDePublicacoes(db)
+	publicacaoSalvaNoBanco, erro := repositorio.BuscarPublicacaoPorId(publicacaoID)
+	if erro != nil {
+		responses.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+
+	if publicacaoSalvaNoBanco.AutorID != usuarioID {
+		responses.Erro(w, http.StatusForbidden, errors.New("não é possível deletar uma publicação de outro usuário"))
+		return
+	}
+
+	if erro = repositorio.DeletarPublicacao(publicacaoID); erro != nil {
+		responses.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+
+	responses.JSON(w, http.StatusNoContent, nil)
+}
