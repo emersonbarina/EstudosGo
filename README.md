@@ -1,5 +1,9 @@
 # EstudosGo
 
+Fora criadas 3 pastas, sendo:
+- Aulas
+- DevBook/api
+- DevBook/web
 
 # basic mysql / docker
 
@@ -55,6 +59,7 @@ Optei por manter junto ao projeto de estudos.
 
 go mod init api
 
+# Pacotes utilizados API
 go get github.com/gorilla/mux
 
 go get github.com/joho/godotenv 
@@ -68,3 +73,8 @@ go get golang.org/x/crypto/bcrypt
 go get github.com/dgrijalva/jwt-go
 
 
+# Início do Projeto WEB
+
+
+# Pacotes utilizados WEB
+go get github.com/gorilla/mux
