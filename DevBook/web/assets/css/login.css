@@ -9,6 +9,7 @@ a {
   font-size: 16px;
   color: #3b5998;
   line-height: 1.4;
+  text-align: center;
 }
 
 a:hover {
@@ -57,7 +58,7 @@ input::placeholder {
   text-align: center;
   width: 100%;
   display: block;
-  padding-bottom: 30px;
+  padding-bottom: 30px;   
 }
 
 .devbook-form > div {
@@ -66,10 +67,10 @@ input::placeholder {
   background-color: #e6e6e6;
   border: 1px solid transparent;
   border-radius: 3px;
-  border-bottom: 16px;
+  margin-bottom: 16px;
 }
 
-.dtn-devbook {
+.btn-devbook {
   font-size: 16px;
   color: #fff;
   line-height: 1.2;
@@ -78,9 +79,9 @@ input::placeholder {
   height: 62px;
   background-color: #3b5998;
   outline: none;
-  border: none;
+  border: none
 }
 
-.dtn-devbook:hover{
+.btn-devbook:hover{
   cursor: pointer;
 }
