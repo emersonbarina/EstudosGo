@@ -3,7 +3,6 @@ package controllers
 import (
 	"bytes"
 	"encoding/json"
-	"log"
 	"net/http"
 	"webapp/responses"
 )
@@ -20,7 +19,9 @@ func CriarUsuario(w http.ResponseWriter, r *http.Request) {
 	})
 
 	if erro != nil {
-		log.Fatal(erro)
+		// log.Fatal(erro)
+		responses.JSON(w, http.StatusBadRequest, responses.ErroAPI{Erro: erro.Error()})
+		return
 	}
 
 	// fmt.Println(usuario)
@@ -28,9 +29,16 @@ func CriarUsuario(w http.ResponseWriter, r *http.Request) {
 
 	response, erro := http.Post("http://localhost:5001/usuarios", "application/json", bytes.NewBuffer(usuario))
 	if erro != nil {
-		log.Fatal(erro)
+		// log.Fatal(erro)
+		responses.JSON(w, http.StatusInternalServerError, responses.ErroAPI{Erro: erro.Error()})
+		return
 	}
 	defer response.Body.Close()
+
+	if response.StatusCode >= 400 {
+		responses.TratarStatusCodeDeErro(w, response)
+		return
+	}
 
 	responses.JSON(w, response.StatusCode, nil)
 }
