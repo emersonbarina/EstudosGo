@@ -81,4 +81,10 @@ go get github.com/gorilla/mux
 
 go get github.com/joho/godotenv 
 
+go get github.com/gorilla/securecookie
+
 Baixando o jQuery em https://jquery.com/download/
+
+# Outros
+
+https://gorilla.github.io/

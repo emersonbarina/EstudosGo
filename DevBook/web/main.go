@@ -5,12 +5,14 @@ import (
 	"log"
 	"net/http"
 	"webapp/source/config"
+	"webapp/source/cookies"
 	"webapp/source/router"
 	"webapp/source/utils"
 )
 
 func main() {
 	config.Carregar()
+	cookies.Configurar()
 	utils.CarregarTemplates()
 	r := router.Gerar()
 
