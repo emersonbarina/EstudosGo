@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/hex"
 	"fmt"
 	"log"
 	"net/http"
@@ -8,7 +9,17 @@ import (
 	"webapp/source/cookies"
 	"webapp/source/router"
 	"webapp/source/utils"
+
+	"github.com/gorilla/securecookie"
 )
+
+func init() {
+	hasKey := hex.EncodeToString(securecookie.GenerateRandomKey(16))
+	fmt.Println(hasKey)
+
+	blockKey := hex.EncodeToString(securecookie.GenerateRandomKey(16))
+	fmt.Println(blockKey)
+}
 
 func main() {
 	config.Carregar()
