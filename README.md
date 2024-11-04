@@ -79,4 +79,6 @@ go get github.com/dgrijalva/jwt-go
 # Pacotes utilizados WEB
 go get github.com/gorilla/mux
 
+go get github.com/joho/godotenv 
+
 Baixando o jQuery em https://jquery.com/download/

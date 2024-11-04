@@ -4,14 +4,16 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"webapp/source/config"
 	"webapp/source/router"
 	"webapp/source/utils"
 )
 
 func main() {
+	config.Carregar()
 	utils.CarregarTemplates()
 	r := router.Gerar()
 
-	fmt.Println("Escutando na porta 3001")
-	log.Fatal(http.ListenAndServe(":3001", r))
+	fmt.Printf("Escutando na porta %d\n", config.Porta)
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", config.Porta), r))
 }

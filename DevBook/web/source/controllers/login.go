@@ -3,7 +3,9 @@ package controllers
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"net/http"
+	"webapp/source/config"
 	"webapp/source/models"
 	"webapp/source/responses"
 )
@@ -22,7 +24,8 @@ func FazerLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response, erro := http.Post("http://localhost:5001/login", "application/json", bytes.NewBuffer(usuario))
+	url := fmt.Sprintf("%s/login", config.APIURL)
+	response, erro := http.Post(url, "application/json", bytes.NewBuffer(usuario))
 	if erro != nil {
 		responses.JSON(w, http.StatusInternalServerError, responses.ErroAPI{Erro: erro.Error()})
 		return
