@@ -1,10 +1,13 @@
 package controllers
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"webapp/source/config"
+	"webapp/source/models"
 	"webapp/source/requests"
+	"webapp/source/responses"
 	"webapp/source/utils"
 )
 
@@ -24,8 +27,31 @@ func CarregarPaginaPrincipal(w http.ResponseWriter, r *http.Request) {
 
 	// response, erro := http.Get(url)
 	response, erro := requests.FazerRequisicaoComAutenticacao(r, http.MethodGet, url, nil)
+	if erro != nil {
+		responses.JSON(w, http.StatusInternalServerError, responses.ErroAPI{Erro: erro.Error()})
+		return
+	}
+	defer response.Body.Close()
 
-	fmt.Println(response.StatusCode, erro)
+	if response.StatusCode >= 400 {
+		responses.TratarStatusCodeDeErro(w, response)
+		return
+	}
 
-	utils.ExecutarTemplate(w, "home.html", nil)
+	// fmt.Println(response.StatusCode, erro)
+	var publicacoes []models.Publicacao
+	if erro = json.NewDecoder(response.Body).Decode(&publicacoes); erro != nil {
+		responses.JSON(w, http.StatusUnprocessableEntity, responses.ErroAPI{Erro: erro.Error()})
+		return
+	}
+	// fmt.Println(publicacoes)
+
+	// utils.ExecutarTemplate(w, "home.html", nil)
+	utils.ExecutarTemplate(w, "home.html", struct {
+		Publicacoes []models.Publicacao
+		OutroCampo  string
+	}{
+		Publicacoes: publicacoes,
+		OutroCampo:  "Valor qualquer",
+	})
 }
