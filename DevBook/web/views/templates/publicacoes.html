@@ -15,11 +15,7 @@
   </a>
 {{ end }}
 
-{{ define "curtir" }}
-  <a href="/curtir">Curtir</a>
-{{ end }}
-
-  
+ 
 {{ define "cabecalho-publicacao" }}
   <h1 class="display-5 fw-bold">{{ .Titulo }}</h1>
   <p class="col-md-8 fs-4">{{ .Conteudo }}</p>
@@ -52,7 +48,6 @@
     {{ template "cabecalho-publicacao" . }}
     <p>
       {{ template "curtidas" . }}
-      {{ template "curtir" }}
     </p>
   <!-- </div> -->
 </div>
