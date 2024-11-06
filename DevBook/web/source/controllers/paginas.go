@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 	"webapp/source/config"
+	"webapp/source/cookies"
 	"webapp/source/models"
 	"webapp/source/requests"
 	"webapp/source/responses"
@@ -46,7 +48,16 @@ func CarregarPaginaPrincipal(w http.ResponseWriter, r *http.Request) {
 	}
 	// fmt.Println(publicacoes)
 
-	utils.ExecutarTemplate(w, "home.html", publicacoes)
+	cookie, _ := cookies.Ler(r)
+	usuarioID, _ := strconv.ParseUint(cookie["id"], 10, 64)
+
+	utils.ExecutarTemplate(w, "home.html", struct {
+		Publicacoes []models.Publicacao
+		UsuarioID   uint64
+	}{
+		Publicacoes: publicacoes,
+		UsuarioID:   usuarioID,
+	})
 	// utils.ExecutarTemplate(w, "home.html", struct {
 	// 	Publicacoes []models.Publicacao
 	// 	OutroCampo  string
