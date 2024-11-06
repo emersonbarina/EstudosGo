@@ -1,0 +1,54 @@
+{{ define "curtidas" }}
+  <span> {{ .Curtidas }} curtidas </span>
+{{ end }}
+
+{{ define "editar" }}
+  <a href="/editar">Editar Publicacao</a>
+{{ end }}
+
+{{ define "deletar" }}
+  <a href="/deletar">Deletar Publicacao</a>
+{{ end }}
+
+{{ define "curtir" }}
+  <a href="/curtir">Curtir</a>
+{{ end }}
+
+  
+{{ define "cabecalho-publicacao" }}
+  <h1 class="display-5 fw-bold">{{ .Titulo }}</h1>
+  <p class="col-md-8 fs-4">{{ .Conteudo }}</p>
+  <a href="#"> {{ .AutorNick }} - {{ .CriadaEm.Format "02/01/2006 03:04" }}</a>
+  <hr class="my-4"> 
+  <!--
+    Jan 2 15:04:05 2006
+
+    1 2 3 4 5 6 
+  -->
+{{ end }}
+  
+
+{{ define "publicacao-com-permissao" }}
+<div class="p-3 mb-2 bg-body-tertiary border rounded-3 jumbotron" data-publicacao-id="{{ .ID }}">  
+  <!-- <div class="container-fluid py-5"> -->
+    {{ template "cabecalho-publicacao" . }}
+    <p>
+      {{ template "curtidas" . }}
+      {{ template "editar" }}
+      {{ template "deletar" }}
+    </p>
+  <!-- </div> -->
+</div>
+{{ end }}
+
+{{ define "publicacao-sem-permissao" }}
+<div class="p-3 mb-2 bg-body-tertiary border rounded-3 jumbotron" data-publicacao-id="{{ .ID }}"> 
+  <!-- <div class="container-fluid py-5"> -->
+    {{ template "cabecalho-publicacao" . }}
+    <p>
+      {{ template "curtidas" . }}
+      {{ template "curtir" }}
+    </p>
+  <!-- </div> -->
+</div>
+{{ end }}
