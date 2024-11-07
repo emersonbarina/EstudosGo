@@ -90,7 +90,7 @@ https://getbootstrap.com/docs/5.0/getting-started/download/
 
 fontawesome https://fontawesome.com/
 
-
+sweetalert2 https://sweetalert2.github.io/
 
 # Outros
 
