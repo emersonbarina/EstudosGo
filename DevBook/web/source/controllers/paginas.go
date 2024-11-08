@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
 	"webapp/source/config"
 	"webapp/source/cookies"
 	"webapp/source/models"
@@ -71,4 +72,30 @@ func CarregarPaginaPrincipal(w http.ResponseWriter, r *http.Request) {
 	// 	Publicacoes: publicacoes,
 	// 	OutroCampo:  "Valor qualquer",
 	// })
+}
+
+// CarregarPaginaDeUSuarios carrega páginas que atendem o filtro passado
+func CarregarPaginaDeUSuarios(w http.ResponseWriter, r *http.Request) {
+	nomeOuNick := strings.ToLower(r.URL.Query().Get("usuario"))
+	url := fmt.Sprintf("%s/usuarios?usuarios=%s", config.APIURL, nomeOuNick)
+
+	response, erro := requests.FazerRequisicaoComAutenticacao(r, http.MethodGet, url, nil)
+	if erro != nil {
+		responses.JSON(w, http.StatusInternalServerError, responses.ErroAPI{Erro: erro.Error()})
+		return
+	}
+	defer response.Body.Close()
+
+	if response.StatusCode >= 400 {
+		responses.TratarStatusCodeDeErro(w, response)
+		return
+	}
+
+	var usuarios []models.Usuario
+	if erro = json.NewDecoder(response.Body).Decode(&usuarios); erro != nil {
+		responses.JSON(w, http.StatusUnprocessableEntity, responses.ErroAPI{Erro: erro.Error()})
+		return
+	}
+
+	utils.ExecutarTemplate(w, "usuarios.html", usuarios)
 }
