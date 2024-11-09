@@ -12,6 +12,8 @@ import (
 	"webapp/source/requests"
 	"webapp/source/responses"
 	"webapp/source/utils"
+
+	"github.com/gorilla/mux"
 )
 
 // CarregarTelaDeLogin vai reenderizar a tela de login
@@ -98,4 +100,16 @@ func CarregarPaginaDeUSuarios(w http.ResponseWriter, r *http.Request) {
 	}
 
 	utils.ExecutarTemplate(w, "usuarios.html", usuarios)
+}
+
+// CarregarPerfilDoUsuario
+func CarregarPerfilDoUsuario(w http.ResponseWriter, r *http.Request) {
+	parametros := mux.Vars(r)
+	usuarioID, erro := strconv.ParseUint(parametros["usuarioId"], 10, 64)
+	if erro != nil {
+		responses.JSON(w, http.StatusBadRequest, responses.ErroAPI{Erro: erro.Error()})
+		return
+	}
+
+	usuario, erro := models.BuscarUsuarioCompleto(usuarioID, r)
 }
