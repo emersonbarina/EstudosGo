@@ -112,4 +112,5 @@ func CarregarPerfilDoUsuario(w http.ResponseWriter, r *http.Request) {
 	}
 
 	usuario, erro := models.BuscarUsuarioCompleto(usuarioID, r)
+	fmt.Println(usuario, erro)
 }
