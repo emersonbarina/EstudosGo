@@ -2,20 +2,31 @@ $('#parar-de-seguir').on('click', pararDeSeguir);
 $('#seguir').on('click', seguir);
 
 function pararDeSeguir() {
-  const usuarioID = $(this).data('usuario-id');
+  const usuarioId = $(this).data('usuario-id');
   $(this).prop('disable', true);
 
   $.ajax({
-    url: `/usuarios/${usuarioID}/parar-de-seguir`,
+    url: `/usuarios/${usuarioId}/deixardeseguir`,
     method: "POST"
   }).done(function() {
-    window.location = `/usuario/${usuarioID}`;
+    window.location = `/usuarios/${usuarioId}`;
   }).fail(function() {
-    FileSystemWritableFileStream.fire("Ops...", "Erro ao parar de seguir o usuário!", "error");
+    Swal.fire("Ops...", "Erro ao parar de seguir o usuário!", "error");
     $(`#parar-de-seguir`).prop('disabled', false);
   });
 }
 
 function seguir() {
+  const usuarioId = $(this).data('usuario-id');
+  $(this).prop('disable', true);
 
+  $.ajax({
+    url: `/usuarios/${usuarioId}/seguir`,
+    method: "POST"
+  }).done(function() {
+    window.location = `/usuarios/${usuarioId}`;
+  }).fail(function() {
+    Swal.fire("Ops...", "Erro ao seguir o usuário!", "error");
+    $(`#seguir`).prop('disabled', false);
+  });
 }
