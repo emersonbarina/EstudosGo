@@ -96,7 +96,7 @@ func BuscarDadosDoUsuario(canal chan<- Usuario, usuarioID uint64, r *http.Reques
 	canal <- usuario
 }
 
-// BuscarSeguidores chapa API para buscar servidores do usuário
+// BuscarSeguidores chapa API para buscar seguidores do usuário
 func BuscarSeguidores(canal chan<- []Usuario, usuarioID uint64, r *http.Request) {
 	url := fmt.Sprintf("%s/usuarios/%d/seguidores", config.APIURL, usuarioID)
 	response, erro := requests.FazerRequisicaoComAutenticacao(r, http.MethodGet, url, nil)
@@ -109,6 +109,11 @@ func BuscarSeguidores(canal chan<- []Usuario, usuarioID uint64, r *http.Request)
 	var seguidores []Usuario
 	if erro = json.NewDecoder(response.Body).Decode(&seguidores); erro != nil {
 		canal <- nil
+		return
+	}
+
+	if seguidores == nil {
+		canal <- make([]Usuario, 0)
 		return
 	}
 
