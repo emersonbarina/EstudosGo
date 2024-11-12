@@ -45,7 +45,10 @@ func CarregarPaginaPrincipal(w http.ResponseWriter, r *http.Request) {
 	defer response.Body.Close()
 
 	if response.StatusCode >= 400 {
-		responses.TratarStatusCodeDeErro(w, response)
+		fmt.Println(">400")
+		// responses.TratarStatusCodeDeErro(w, response)
+		// redirecionei para login em caso de erro
+		utils.ExecutarTemplate(w, "login.html", nil)
 		return
 	}
 
@@ -133,7 +136,7 @@ func CarregarPerfilDoUsuario(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-// CarregarPerfilDoUsuarioLogado chama a API que carrega o perfil do usuário logado
+// CarregarPerfilDoUsuarioLogado carrega a página do perfil do usuário logado
 func CarregarPerfilDoUsuarioLogado(w http.ResponseWriter, r *http.Request) {
 	cookie, _ := cookies.Ler(r)
 	usuarioID, _ := strconv.ParseUint(cookie["id"], 10, 64)
@@ -145,4 +148,21 @@ func CarregarPerfilDoUsuarioLogado(w http.ResponseWriter, r *http.Request) {
 	}
 
 	utils.ExecutarTemplate(w, "perfil.html", usuario)
+}
+
+// CarregarPaginaDeEdicaoDeUsuario carrega a página de edição do usuário logado
+func CarregarPaginaDeEdicaoDeUsuario(w http.ResponseWriter, r *http.Request) {
+	cookie, _ := cookies.Ler(r)
+	usuarioID, _ := strconv.ParseUint(cookie["id"], 10, 64)
+
+	canal := make(chan models.Usuario)
+	go models.BuscarDadosDoUsuario(canal, usuarioID, r)
+	usuario := <-canal
+
+	if usuario.ID == 0 {
+		responses.JSON(w, http.StatusInternalServerError, responses.ErroAPI{Erro: "erro ao buscar o usuário"})
+		return
+	}
+
+	utils.ExecutarTemplate(w, "editar-usuario.html", usuario)
 }
