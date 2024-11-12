@@ -75,7 +75,7 @@ func PararDeSeguirUsuario(w http.ResponseWriter, r *http.Request) {
 	responses.JSON(w, response.StatusCode, nil)
 }
 
-// SeguirUsuario chapa a API para seguir um usuário
+// SeguirUsuario chama a API para seguir um usuário
 func SeguirUsuario(w http.ResponseWriter, r *http.Request) {
 	parametros := mux.Vars(r)
 	usuarioID, erro := strconv.ParseUint(parametros["usuarioId"], 10, 64)
