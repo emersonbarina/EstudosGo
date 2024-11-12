@@ -5,6 +5,10 @@ Fora criadas 3 pastas, sendo:
 - DevBook/api
 - DevBook/web
 
+repositórios:
+Aulas Iniciais: https://github.com/OtavioGallego/curso-golang
+Aplicação: https://github.com/OtavioGallego/DevBook
+
 # basic mysql / docker
 
 docker pull mysql:9.0.1  
